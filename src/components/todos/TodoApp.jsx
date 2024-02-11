@@ -11,16 +11,23 @@ const initTodos = [
 ];
 
 let countId = 6;
+
+const ACT = {
+  del: 'DEL',
+  add: 'ADD',
+  toggle: 'TOGGLE',
+};
+
 function todoReducer(state, action) {
   switch (action.type) {
-    case 'delete':
+    case ACT.del:
       return state.filter((tObj) => tObj.id !== action.payload);
-    case 'addNewTodo':
+    case ACT.add:
       return [
         ...state,
         { id: countId++, title: action.payload, isDone: false },
       ];
-    case 'complete':
+    case ACT.toggle:
       return state.map((tObj) => {
         if (tObj.id === action.payload) {
           return { ...tObj, isDone: !tObj.isDone };
@@ -40,14 +47,16 @@ export default function TodoApp() {
 
   const [state, dispatch] = useReducer(todoReducer, initTodos);
 
-  const handleNewTodo = (newTodoValue) =>
-    dispatch({ type: 'addNewTodo', payload: newTodoValue });
+  const handleNewTodo = (newTodoValue) => {
+    dispatch({ type: ACT.add, payload: newTodoValue });
+    setNewTodoValue('');
+  };
 
   const hundleDelete = (idToDelete) =>
-    dispatch({ type: 'delete', payload: idToDelete });
+    dispatch({ type: ACT.del, payload: idToDelete });
 
   const makeDone = (idToComp) =>
-    dispatch({ type: 'complete', payload: idToComp });
+    dispatch({ type: ACT.toggle, payload: idToComp });
 
   return (
     <div>
