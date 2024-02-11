@@ -1,5 +1,6 @@
 import { useReducer, useState } from "react"
 import Button from "../counter/ui/Button";
+import OneTodo from "./OneTodo";
 
 const initTodos = [
   {id: 1, title: 'Pull ups', isDone: false,},
@@ -9,13 +10,24 @@ const initTodos = [
   {id: 5, title: 'Do home Work', isDone: false,},
 ]
 
-let countId = 5
+let countId = 6
 function todoReducer(state, action) {
   switch (action.type) {
 case 'delete':
   return state.filter((tObj) => tObj.id !== action.payload);
   case 'addNewTodo':
-    return [...state, {id: 6, title: action.payload, isDone: false}]
+    return [...state, {id: countId++, title: action.payload, isDone: false}]
+  case 'complete':
+    return state.map((tObj) => {
+      if (tObj.id === action.payload) {
+        return {id: tObj.id, title: tObj.title, isDone: true}
+      } else {
+        return tObj
+      }
+    });
+
+
+
 default:
   console.warn('type nerastas');
    return state
@@ -36,6 +48,11 @@ function hundleDelete(idToDel) {
   dispatch({type: 'delete', payload: idToDel})
 
 }
+
+function makeDone(idToComp) {
+  dispatch({type: 'complete', payload: idToComp})
+}
+
   return (
     <div>
       <h2 className="text-2xl mb-10">TodoApp</h2>
@@ -47,11 +64,9 @@ function hundleDelete(idToDel) {
 
 
       <ul className="flex flex-col gap-3">
-        {state.map((tObj) => <li key={tObj.id}>
-          <span className="font-semibold text-lg">{tObj.title} </span>
-          <span> - is {tObj.isDone ? 'Done' : 'NOT Done'}</span>{' '}   
-          <Button onClick={() => hundleDelete(tObj.id)}>Delete</Button> 
-          </li>) }
+        {state.map((tObj) => 
+        <OneTodo key={tObj.id} tObj={tObj} onHundleDelete={hundleDelete} onMakeDone={makeDone}/>
+        ) }
       </ul>
     </div>
   ) 
