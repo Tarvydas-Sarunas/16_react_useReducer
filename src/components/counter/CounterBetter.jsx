@@ -6,8 +6,34 @@ const initState = {
 }
 
 function counterReducer(state, action ) {
+console.log('counterReducer ran');
+console.log('action ===', action);
+// if (action.type === 'UP') {
+// return {value: state.value + 1}
+// } else if (action.type === 'DOWN') {
+//   return {value: state.value - 1}
+// } else if (action.type === 'RESET') {
+//   return initState
+// }
+// return state
 
+switch (action.type) {
+  case 'UP':
+    return {value: state.value + 1};
+  case 'DOWN': 
+    return {value: state.value - 1};
+  case 'RESET': 
+    return initState
+  case 'UP_BY': 
+    return {value: state.value + action.payload}
+
+    default: 
+    console.warn('nerastas toks action type', action.type);
+    return state
 }
+}
+
+
 
 export default function CounterBetter() {
 // const [state, setState] = useState(initState)
@@ -18,16 +44,16 @@ console.log('state ===', state);
 
 function goUp() {
   // padidinam state 1
- 
+  dispatch({type: 'UP'})
 }
 
 function goDown() {
   // pamazinamem state 1
-  
+  dispatch({type: 'DOWN'})
 }
 
 function reset() {
- 
+ dispatch({type: 'RESET'})
 }
 
 function inputChange(event) {
@@ -37,7 +63,7 @@ function inputChange(event) {
 }
 
 function upByValue(howMuch) {
-  
+  dispatch({type: 'UP_BY', payload: howMuch})
 }
 
   return (
