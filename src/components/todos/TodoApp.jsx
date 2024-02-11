@@ -20,7 +20,7 @@ case 'delete':
   case 'complete':
     return state.map((tObj) => {
       if (tObj.id === action.payload) {
-        return {id: tObj.id, title: tObj.title, isDone: true}
+        return { ...tObj, isDone: !tObj.isDone}
       } else {
         return tObj
       }
