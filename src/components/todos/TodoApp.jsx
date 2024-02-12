@@ -1,6 +1,7 @@
 import { useReducer, useState } from 'react';
 import Button from '../counter/ui/Button';
 import OneTodo from './OneTodo';
+import AddTodo from './AddTodo';
 
 const initTodos = [
   { id: 1, title: 'Pull ups', isDone: false },
@@ -16,6 +17,7 @@ const ACT = {
   del: 'DEL',
   add: 'ADD',
   toggle: 'TOGGLE',
+  update: 'UPDATE',
 };
 
 function todoReducer(state, action) {
@@ -35,6 +37,7 @@ function todoReducer(state, action) {
           return tObj;
         }
       });
+    case ACT.update:
 
     default:
       console.warn('type nerastas');
@@ -43,13 +46,12 @@ function todoReducer(state, action) {
 }
 
 export default function TodoApp() {
-  const [newTodoValue, setNewTodoValue] = useState('');
+  const [isUpdate, setIsUpdate] = useState(false);
 
   const [state, dispatch] = useReducer(todoReducer, initTodos);
 
   const handleNewTodo = (newTodoValue) => {
     dispatch({ type: ACT.add, payload: newTodoValue });
-    setNewTodoValue('');
   };
 
   const hundleDelete = (idToDelete) =>
@@ -58,22 +60,16 @@ export default function TodoApp() {
   const makeDone = (idToComp) =>
     dispatch({ type: ACT.toggle, payload: idToComp });
 
+  const handleUpdate = (idToUpd) => {
+    dispatch({ type: ACT.update, payload: idToUpd });
+  };
+
   return (
     <div>
       <h2 className='text-2xl mb-10'>TodoApp</h2>
 
-      <div className='flex mb-10'>
-        <input
-          onChange={(event) => setNewTodoValue(event.target.value)}
-          className='border w-full px-3 py-[6px] rounded-md'
-          type='text'
-          placeholder='new todo'
-          value={newTodoValue}
-        />
-        <Button onClick={handleNewTodo} outline>
-          Add
-        </Button>
-      </div>
+      <AddTodo onHandleNewTodo={handleNewTodo} />
+
       <ul className='flex flex-col gap-3'>
         {state.map((tObj) => (
           <OneTodo
@@ -81,6 +77,7 @@ export default function TodoApp() {
             tObj={tObj}
             onHundleDelete={hundleDelete}
             onMakeDone={makeDone}
+            onHandleUpdat={handleUpdate}
           />
         ))}
       </ul>
